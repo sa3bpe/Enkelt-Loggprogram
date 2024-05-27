@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amatörradio Loggprogram</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Amatörradio Loggprogram</h1>
+        <form id="logForm">
+            <label for="date">Datum:</label>
+            <input type="date" id="date" required>
+            <label for="time">Tid:</label>
+            <input type="time" id="time" required>
+            <label for="callsign">Callsign:</label>
+            <input type="text" id="callsign" required>
+            <label for="frequency">Frekvens:</label>
+            <input type="text" id="frequency" required>
+            <label for="sentReport">Skickad signalrapport:</label>
+            <input type="text" id="sentReport" required>
+            <label for="receivedReport">Mottagen signalrapport:</label>
+            <input type="text" id="receivedReport" required>
+            <button type="submit">Lägg till logg</button>
+        </form>
+        <h2>Loggposter</h2>
+        <table id="logTable">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Tid (UTC)</th>
+                    <th>Callsign</th>
+                    <th>Frekvens</th>
+                    <th>Skickad signalrapport</th>
+                    <th>Mottagen signalrapport</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Log entries will be added here -->
+            </tbody>
+        </table>
+        <button id="saveButton">Spara till CSV</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
