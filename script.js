@@ -10,12 +10,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const time = document.getElementById('time').value;
         const callsign = document.getElementById('callsign').value;
         const frequency = document.getElementById('frequency').value;
+        const mode = document.getElementById('mode').value;
         const sentReport = document.getElementById('sentReport').value;
         const receivedReport = document.getElementById('receivedReport').value;
         
         const utcTime = convertToUTC(date, time);
         
-        addLogEntry(date, utcTime, callsign, frequency, sentReport, receivedReport);
+        addLogEntry(date, utcTime, callsign, frequency, mode, sentReport, receivedReport);
         logForm.reset();
     });
     
@@ -24,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return localDate.toISOString().substring(11, 16); // Return only the time part (HH:MM)
     }
 
-    function addLogEntry(date, utcTime, callsign, frequency, sentReport, receivedReport) {
-        const logEntry = { date, time: utcTime, callsign, frequency, sentReport, receivedReport };
+    function addLogEntry(date, utcTime, callsign, frequency, mode, sentReport, receivedReport) {
+        const logEntry = { date, time: utcTime, callsign, frequency, mode, sentReport, receivedReport };
         let logEntries = JSON.parse(localStorage.getItem('logEntries')) || [];
         logEntries.push(logEntry);
         localStorage.setItem('logEntries', JSON.stringify(logEntries));
@@ -38,8 +39,9 @@ document.addEventListener("DOMContentLoaded", function() {
         row.insertCell(1).textContent = logEntry.time;
         row.insertCell(2).textContent = logEntry.callsign;
         row.insertCell(3).textContent = logEntry.frequency;
-        row.insertCell(4).textContent = logEntry.sentReport;
-        row.insertCell(5).textContent = logEntry.receivedReport;
+        row.insertCell(4).textContent = logEntry.mode;
+        row.insertCell(5).textContent = logEntry.sentReport;
+        row.insertCell(6).textContent = logEntry.receivedReport;
     }
     
     function loadLogEntries() {
@@ -54,9 +56,9 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        let csvContent = "data:text/csv;charset=utf-8,Datum,Tid (UTC),Callsign,Frekvens,Skickad signalrapport,Mottagen signalrapport\n";
+        let csvContent = "data:text/csv;charset=utf-8,Datum,Tid (UTC),Callsign,Frekvens,Mode,Skickad signalrapport,Mottagen signalrapport\n";
         logEntries.forEach(entry => {
-            const row = `${entry.date},${entry.time},${entry.callsign},${entry.frequency},${entry.sentReport},${entry.receivedReport}`;
+            const row = `${entry.date},${entry.time},${entry.callsign},${entry.frequency},${entry.mode},${entry.sentReport},${entry.receivedReport}`;
             csvContent += row + "\n";
         });
 
