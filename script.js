@@ -19,9 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const sentReport = document.getElementById('sentReport').value;
         const receivedReport = document.getElementById('receivedReport').value;
         
-        const utcTime = convertToUTC(date, time);
-        
-        addLogEntry(operator, date, utcTime, callsign, frequency, mode, sentReport, receivedReport);
+        addLogEntry(operator, date, time, callsign, frequency, mode, sentReport, receivedReport);
         logForm.reset();
         setDefaultDateTime();
     });
@@ -34,13 +32,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('time').value = utcTime;
     }
 
-    function convertToUTC(date, time) {
-        const localDate = new Date(date + 'T' + time);
-        return localDate.toISOString().substring(11, 16); // Return only the time part (HH:MM)
-    }
-
-    function addLogEntry(operator, date, utcTime, callsign, frequency, mode, sentReport, receivedReport) {
-        const logEntry = { operator, date, time: utcTime, callsign, frequency, mode, sentReport, receivedReport };
+    function addLogEntry(operator, date, time, callsign, frequency, mode, sentReport, receivedReport) {
+        const logEntry = { operator, date, time, callsign, frequency, mode, sentReport, receivedReport };
         let logEntries = JSON.parse(localStorage.getItem('logEntries')) || [];
         logEntries.push(logEntry);
         localStorage.setItem('logEntries', JSON.stringify(logEntries));
