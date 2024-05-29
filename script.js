@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const saveButton = document.getElementById('saveButton');
     const exportAdifButton = document.getElementById('exportAdifButton');
     
+    // Set default date and time to UTC
+    setDefaultDateTime();
+    
     logForm.addEventListener('submit', function(event) {
         event.preventDefault();
         
@@ -19,8 +22,18 @@ document.addEventListener("DOMContentLoaded", function() {
         const utcTime = convertToUTC(date, time);
         
         addLogEntry(operator, date, utcTime, callsign, frequency, mode, sentReport, receivedReport);
+        logForm.reset();
+        setDefaultDateTime();
     });
     
+    function setDefaultDateTime() {
+        const now = new Date();
+        const utcDate = now.toISOString().substring(0, 10);
+        const utcTime = now.toISOString().substring(11, 16);
+        document.getElementById('date').value = utcDate;
+        document.getElementById('time').value = utcTime;
+    }
+
     function convertToUTC(date, time) {
         const localDate = new Date(date + 'T' + time);
         return localDate.toISOString().substring(11, 16); // Return only the time part (HH:MM)
