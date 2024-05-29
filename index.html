@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amatörradio Loggprogram</title>
+    <title>Amatörradio Loggprogram av SA3BPE</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Amatörradio Loggprogram</h1>
         <form id="logForm">
+            <label for="operator">Operatör:</label>
+            <input type="text" id="operator" required>
             <label for="date">Datum:</label>
             <input type="date" id="date" required>
             <label for="time">Tid:</label>
@@ -30,6 +32,7 @@
         <table id="logTable">
             <thead>
                 <tr>
+                    <th>Operatör</th>
                     <th>Datum</th>
                     <th>Tid (UTC)</th>
                     <th>Callsign</th>
@@ -44,6 +47,7 @@
             </tbody>
         </table>
         <button id="saveButton">Spara till CSV</button>
+        <button id="exportAdifButton">Exportera till ADIF</button>
     </div>
     <script src="script.js"></script>
 </body>

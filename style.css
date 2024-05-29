@@ -90,10 +90,9 @@ table tr:last-child td {
     border-bottom: none;
 }
 
-button#saveButton {
+button#saveButton, button#exportAdifButton {
     width: 100%;
     padding: 10px;
-    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 5px;
@@ -103,8 +102,20 @@ button#saveButton {
     margin-top: 10px;
 }
 
+button#saveButton {
+    background-color: #28a745;
+}
+
 button#saveButton:hover {
     background-color: #218838;
+}
+
+button#exportAdifButton {
+    background-color: #17a2b8;
+}
+
+button#exportAdifButton:hover {
+    background-color: #138496;
 }
 
 @media (max-width: 600px) {
