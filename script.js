@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const logTableBody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
     const saveButton = document.getElementById('saveButton');
     const exportAdifButton = document.getElementById('exportAdifButton');
-    
+    let editIndex = null;
+
     // Set default date and time to UTC
     setDefaultDateTime();
     
@@ -19,7 +20,14 @@ document.addEventListener("DOMContentLoaded", function() {
         const sentReport = document.getElementById('sentReport').value;
         const receivedReport = document.getElementById('receivedReport').value;
         
-        addLogEntry(operator, date, time, callsign, frequency, mode, sentReport, receivedReport);
+        const logEntry = { operator, date, time, callsign, frequency, mode, sentReport, receivedReport };
+
+        if (editIndex !== null) {
+            updateLogEntry(editIndex, logEntry);
+        } else {
+            addLogEntry(logEntry);
+        }
+
         logForm.reset();
         setDefaultDateTime();
     });
@@ -32,15 +40,43 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('time').value = utcTime;
     }
 
-    function addLogEntry(operator, date, time, callsign, frequency, mode, sentReport, receivedReport) {
-        const logEntry = { operator, date, time, callsign, frequency, mode, sentReport, receivedReport };
+    function addLogEntry(logEntry) {
         let logEntries = JSON.parse(localStorage.getItem('logEntries')) || [];
         logEntries.push(logEntry);
         localStorage.setItem('logEntries', JSON.stringify(logEntries));
-        appendLogEntryToTable(logEntry);
+        appendLogEntryToTable(logEntry, logEntries.length - 1);
     }
 
-    function appendLogEntryToTable(logEntry) {
+    function updateLogEntry(index, logEntry) {
+        let logEntries = JSON.parse(localStorage.getItem('logEntries')) || [];
+        logEntries[index] = logEntry;
+        localStorage.setItem('logEntries', JSON.stringify(logEntries));
+        refreshLogTable();
+        editIndex = null;
+    }
+
+    function deleteLogEntry(index) {
+        let logEntries = JSON.parse(localStorage.getItem('logEntries')) || [];
+        logEntries.splice(index, 1);
+        localStorage.setItem('logEntries', JSON.stringify(logEntries));
+        refreshLogTable();
+    }
+
+    function editLogEntry(index) {
+        let logEntries = JSON.parse(localStorage.getItem('logEntries')) || [];
+        const logEntry = logEntries[index];
+        document.getElementById('operator').value = logEntry.operator;
+        document.getElementById('date').value = logEntry.date;
+        document.getElementById('time').value = logEntry.time;
+        document.getElementById('callsign').value = logEntry.callsign;
+        document.getElementById('frequency').value = logEntry.frequency;
+        document.getElementById('mode').value = logEntry.mode;
+        document.getElementById('sentReport').value = logEntry.sentReport;
+        document.getElementById('receivedReport').value = logEntry.receivedReport;
+        editIndex = index;
+    }
+
+    function appendLogEntryToTable(logEntry, index) {
         const row = logTableBody.insertRow();
         row.insertCell(0).textContent = logEntry.operator;
         row.insertCell(1).textContent = logEntry.date;
@@ -50,11 +86,29 @@ document.addEventListener("DOMContentLoaded", function() {
         row.insertCell(5).textContent = logEntry.mode;
         row.insertCell(6).textContent = logEntry.sentReport;
         row.insertCell(7).textContent = logEntry.receivedReport;
+
+        const actionsCell = row.insertCell(8);
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Redigera';
+        editButton.classList.add('edit');
+        editButton.addEventListener('click', () => editLogEntry(index));
+        actionsCell.appendChild(editButton);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Ta bort';
+        deleteButton.classList.add('delete');
+        deleteButton.addEventListener('click', () => deleteLogEntry(index));
+        actionsCell.appendChild(deleteButton);
     }
-    
+
+    function refreshLogTable() {
+        logTableBody.innerHTML = '';
+        loadLogEntries();
+    }
+
     function loadLogEntries() {
         const logEntries = JSON.parse(localStorage.getItem('logEntries')) || [];
-        logEntries.forEach(entry => appendLogEntryToTable(entry));
+        logEntries.forEach((entry, index) => appendLogEntryToTable(entry, index));
     }
 
     function saveToCSV() {
